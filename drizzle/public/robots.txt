@@ -1,0 +1,22 @@
+# robots.txt for Big Partner - Real Estate Investment Platform
+User-agent: *
+Allow: /
+
+# Sitemap location
+Sitemap: https://bigpartner.in/sitemap.xml
+
+# Disallow admin and API routes
+Disallow: /admin/
+Disallow: /api/
+
+# Allow all property pages
+Allow: /properties
+Allow: /properties-residential
+Allow: /properties-commercial
+Allow: /properties-industrial
+Allow: /properties-farmland
+Allow: /properties-rental
+Allow: /property/
+
+# Crawl delay (optional, helps prevent server overload)
+Crawl-delay: 1

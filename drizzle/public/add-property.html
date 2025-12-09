@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Layout Property</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 15px 32px;
+            text-align: center;
+            font-size: 16px;
+            border: none;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        button:disabled {
+            background-color: #cccccc;
+            cursor: not-allowed;
+        }
+        #result {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 4px;
+        }
+        .success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        .error {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+    </style>
+</head>
+<body>
+    <h1>Add Layout Property to Database</h1>
+    <p>Click the button below to add the "Land for Layout – 15 km from Chennai" property to the database.</p>
+    
+    <button id="addBtn" onclick="addProperty()">Add Property</button>
+    
+    <div id="result"></div>
+    
+    <script>
+        async function addProperty() {
+            const btn = document.getElementById('addBtn');
+            const resultDiv = document.getElementById('result');
+            
+            btn.disabled = true;
+            btn.textContent = 'Adding property...';
+            resultDiv.innerHTML = '';
+            
+            try {
+                const response = await fetch('/api/properties/add-layout', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    resultDiv.className = 'success';
+                    resultDiv.innerHTML = `
+                        <h3>✅ Property Added Successfully!</h3>
+                        <p><strong>Property ID:</strong> ${data.propertyId}</p>
+                        <p><strong>Title:</strong> ${data.property.title}</p>
+                        <p><strong>Type:</strong> ${data.property.type}</p>
+                        <p><strong>Area:</strong> ${data.property.area.toLocaleString()} sq.ft</p>
+                        <p><strong>Location:</strong> ${data.property.location}</p>
+                        <p><strong>Status:</strong> ${data.property.status}</p>
+                        <br>
+                        <p><a href="/properties">View All Properties</a></p>
+                    `;
+                    btn.textContent = 'Property Added ✓';
+                } else {
+                    throw new Error(data.message || 'Failed to add property');
+                }
+            } catch (error) {
+                resultDiv.className = 'error';
+                resultDiv.innerHTML = `
+                    <h3>❌ Error</h3>
+                    <p>${error.message}</p>
+                `;
+                btn.disabled = false;
+                btn.textContent = 'Try Again';
+            }
+        }
+    </script>
+</body>
+</html>
